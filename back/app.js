@@ -10,6 +10,7 @@ mongoose.connect('mongodb+srv://user_01:vytalu1058@cluster0.keawd.mongodb.net/my
 
 
 const express = require('express');
+const userRoutes = require('./routes/user')
 
 const app = express();
 
@@ -50,4 +51,6 @@ const app = express();
 //     ];
 //     res.status(200).json(stuff);
 //   });
+
+app.use('/api/auth',userRoutes);
 module.exports = app;
