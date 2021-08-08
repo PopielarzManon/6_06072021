@@ -3,8 +3,16 @@ require('dotenv').config()
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+//Sécurité
+const emailMaskOptions = {
+  maskWith: "*",
+  unmaskedStartCharactersBeforeAt: 1,
+  unmaskedEndCharactersAfterAt: 1,
+  maskAtTheRate: false,
+};
 
 
+//Création d'un compte
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
@@ -19,6 +27,7 @@ exports.signup = (req, res, next) => {
       .catch(error => res.status(500).json({ error }));
   };
 
+//Connextion à un compte
   exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
       .then(user => {

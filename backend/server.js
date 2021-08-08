@@ -1,3 +1,5 @@
+//Entrée de page et point de serveur puis app.js
+
 const http = require('http');
 const app = require('./app');
 
