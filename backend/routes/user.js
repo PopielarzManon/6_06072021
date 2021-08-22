@@ -5,7 +5,7 @@ const userCtrl = require("../controllers/user");
 const passCtrl = require("../middleware/pass")
 
 
-router.post("/signup", passCtrl, userCtrl.signup);
-router.post("/login", userCtrl.login);
+router.post("/signup", userCtrl.signup);
+router.post("/login",passCtrl, userCtrl.login);
 
 module.exports = router;
