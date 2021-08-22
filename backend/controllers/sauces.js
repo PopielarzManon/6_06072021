@@ -58,7 +58,7 @@ exports.deleteSauce = (req, res, next) => {
     .then((thing) => {
       const filename = thing.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
-        Thing.deleteOne({ _id: req.params.id })
+        Sauce.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: "Objet supprimé !" }))
           .catch((error) => res.status(400).json({ error }));
       });
@@ -121,7 +121,7 @@ exports.likeSauce = (req, res, next) => {
             .then(() =>
               res
                 .status(200)
-                .json({ message: "enleve le like ! Mince alors.." })
+                .json({ message: "Like en moins " })
             )
             .catch((error) => res.status(400).json({ error }));
         } else if (sauce.usersDisliked.includes(req.body.userId)) {
@@ -133,7 +133,7 @@ exports.likeSauce = (req, res, next) => {
             }
           )
             .then(() =>
-              res.status(200).json({ message: "enleve le dislike ! Yepa !" })
+              res.status(200).json({ message: "Like en plus!" })
             )
             .catch((error) => res.status(400).json({ error }));
         }

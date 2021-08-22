@@ -2,6 +2,21 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const MaskData = require('./maskdata');
+const passwordValidator = require('password-validator');
+ 
+// Schema de sécurité
+const schema = new passwordValidator();
+ 
+// propriétés
+schema
+.is().min(8)                                    
+.is().max(100)                                  
+.has().uppercase()                              
+.has().lowercase()                              
+.has().digits(2)                                
+.has().not().spaces()                           
+.is().not().oneOf(['Passw0rd', 'Password123']);
 
 //Sécurité
 const emailMaskOptions = {
@@ -18,12 +33,12 @@ exports.signup = (req, res, next) => {
     .then((hash) => {
       const user = new User({
         email: req.body.email,
-        password: hash,
+        password: hash, schema,
       });
       user
         .save()
         .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
-        .catch((error) => res.status(400).json({ error }));
+        .catch((error) => res.status(400).json({ error })); 
     })
     .catch((error) => res.status(500).json({ error }));
 };

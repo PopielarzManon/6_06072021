@@ -4,16 +4,18 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 //Import de sécurité
-const uniqueValidator = require("mongoose-unique-validator");
+
 const helmet = require("helmet");
 const cookieSession = require("cookie-session");
 const xssClean = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
 
+
 //Import des routes
 const userRoutes = require("./routes/user");
 const path = require("path");
 const stuffRoutes = require("./routes/sauces");
+const rateLimit = require("express-rate-limit");
 
 //Connextion à Mongoose avec les id et mdp
 mongoose
@@ -47,6 +49,12 @@ app.disable("x-powered-by");
 app.use(mongoSanitize());
 
 app.use(xssClean());
+app.use(limiter);
+//limite rate
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100 
+});
 
 //Modifier l'accès et erreur CORS
 app.use((req, res, next) => {
