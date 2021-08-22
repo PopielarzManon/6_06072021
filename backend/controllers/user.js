@@ -2,21 +2,11 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const MaskData = require('./maskdata');
-const passwordValidator = require('password-validator');
+const maskData = require("maskdata");
+
+
  
-// Schema de sécurité
-const schema = new passwordValidator();
- 
-// propriétés
-schema
-.is().min(8)                                    
-.is().max(100)                                  
-.has().uppercase()                              
-.has().lowercase()                              
-.has().digits(2)                                
-.has().not().spaces()                           
-.is().not().oneOf(['Passw0rd', 'Password123']);
+
 
 //Sécurité
 const emailMaskOptions = {
@@ -32,7 +22,7 @@ exports.signup = (req, res, next) => {
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
-        email: req.body.email,
+        email: maskData.maskEmail2(req.body.email, emailMaskOptions),
         password: hash, schema,
       });
       user
@@ -45,7 +35,9 @@ exports.signup = (req, res, next) => {
 
 //Connextion à un compte
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({
+    email: maskData.maskEmail2(req.body.email, emailMaskOptions), 
+  })
     .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
